@@ -56,7 +56,9 @@ def forbidden(error) -> str:
 def authenticate_user():
     """Authenticates a user before processing a request.
     """
-    if auth:
+    if auth is None:
+        return
+
         excluded_paths = [
             '/api/v1/status/',
             '/api/v1/unauthorized/',
