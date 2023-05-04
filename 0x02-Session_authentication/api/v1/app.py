@@ -21,7 +21,8 @@ if auth_type == 'auth':
     auth = Auth()
 if auth_type == 'basic_auth':
     auth = BasicAuth()
-
+if auth_type == 'session_suth':
+    auth = SrssionAuth()
 
 @app.errorhandler(404)
 def not_found(error) -> str:
