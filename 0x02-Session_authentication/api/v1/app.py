@@ -15,6 +15,7 @@ from api.v1.auth.session_auth import SessionAuth
 from api.v1.auth.session_exp_auth import SessionExpAuth
 from api.v1.auth.session_db_auth import SessionDBAuth
 
+
 app = Flask(__name__)
 app.register_blueprint(app_views)
 CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
@@ -66,9 +67,9 @@ def authenticate_user():
         ]
         if auth.require_auth(request.path, excluded_paths):
             auth_header = auth.authorization_header(request)
-            auth_session = auth.session_cookie(requset)
+            auth_session = auth.session_cookie(request)
             user = auth.current_user(request)
-            if auth_header is None:
+            if auth_header is None and auth_session is None:
                 abort(401)
             if user is None:
                 abort(403)
