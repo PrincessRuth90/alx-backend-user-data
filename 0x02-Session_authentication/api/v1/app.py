@@ -8,26 +8,28 @@ from flask import Flask, jsonify, abort, request
 from flask_cors import (CORS, cross_origin)
 import os
 
+from api.v1.views import app_views
+from api.v1.auth.auth import Auth
+from api.v1.auth.basic_auth import BasicAuth
+from api.v1.auth.session_auth import SessionAuth
+from api.v1.auth.session_exp_auth import SessionExpAuth
+from api.v1.auth.session_db_auth import SessionDBAuth
+
 
 app = Flask(__name__)
 app.register_blueprint(app_views)
 CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 auth = None
-
-if getenv('AUTH_TYPE') == "auth":
-    from api.v1.auth.auth import Auth
+auth_type = getenv('AUTH_TYPE', 'auth')
+if auth_type == 'auth':
     auth = Auth()
-elif getenv('AUTH_TYPE') == "basic_auth":
-    from api.v1.auth.basic_auth import BasicAuth
+if auth_type == 'basic_auth':
     auth = BasicAuth()
-elif getenv('AUTH_TYPE') == "session_auth":
-    from api.v1.auth.session_auth import SessionAuth
+if auth_type == 'session_auth':
     auth = SessionAuth()
-elif getenv('AUTH_TYPE') == "session_exp_auth":
-    from api.v1.auth.session_exp_auth import SessionExpAuth
+if auth_type == 'session_exp_auth':
     auth = SessionExpAuth()
-elif getenv('AUTH_TYPE') == "session_db_auth":
-    from api.v1.auth.session_db_auth import SessionDBAuth
+if auth_type == 'session_db_auth':
     auth = SessionDBAuth()
 
 
@@ -56,9 +58,7 @@ def forbidden(error) -> str:
 def authenticate_user():
     """Authenticates a user before processing a request.
     """
-    if auth is None:
-        return
-
+    if auth:
         excluded_paths = [
             '/api/v1/status/',
             '/api/v1/unauthorized/',
