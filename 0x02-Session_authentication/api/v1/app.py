@@ -30,6 +30,7 @@ if auth_type == 'session_exp_auth':
 if auth_type == 'session_db_auth':
     auth = SessionDBAuth()
 
+
 @app.errorhandler(404)
 def not_found(error) -> str:
     """ Not found handler
