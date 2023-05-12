@@ -84,7 +84,11 @@ def get_reset_password_token() -> str:
 
 @app.route('/reset_password', methods=['PUT'], strict_slashes=False)
 def update_password() -> Tuple[str, int]:
-    """update password"""
+    """update password
+    
+    Returns:
+        str: JSON payload containing email and success message
+    """
     reset_token = request.form.get('reset_token')
     new_password = request.form.get('new_password')
     email = request.form.get('email')
